@@ -37,12 +37,12 @@ monkey.scale=0.1;
   obstacle = createSprite(400,170,50,40)
   obstacle.addImage(obstacleImage);
   obstacle.scale=0.1;
-  obstacle.velocityX=-2
+  obstacle.velocityX = -(6 + 3*score/100);
 
-banana = createSprite(200,145,20, 50)  
+banana = createSprite(400,110,20, 50)  
 banana.addImage(bananaImage);  
 banana.scale=0.1;  
-banana.velocityX=-2
+banana.velocityX = -(6 + 3*score/100);
   
   stroke("white");
   textSize(20);
@@ -69,6 +69,15 @@ function draw() {
 background(255);
 
   text("Score: "+ score, 500,50);
+
+  if (monkey.isTouching(banana)){
+    banana.destroy   
+  }
+  
+  if (gameState===PLAY){
+    score = score + Math.round(getFrameRate()/60);
+    ground.velocityX = -(6 + 3*score/100);
+ 
   
   if(keyDown("space") && monkey.y >= 159) {
       monkey.velocityY = -12;
@@ -80,9 +89,10 @@ background(255);
       ground.x = ground.width/2;
     }
   
-    monkey.collide(invisibleGround);
-  monkey.collide(obstacle);
- monkey.collide(banana);
+  monkey.collide(invisibleGround);
+    spawnbanana();
+    spawnObstacle();
+  
    
   
   if(obstacleGroup.isTouching(monkey)){
@@ -101,16 +111,19 @@ background(255);
   obstacleGroup.setLifetimeEach(-1);
     FoodGroup.setLifetimeEach(-1);
     drawSprites(); 
+   
+   
+   
 }
 
 function spawnbanana() {
   //write code here to spawn the clouds
   if (frameCount % 60 === 0) {
-    var banana = createSprite(600,120,40,10);
+    var banana = createSprite(400,110,20,50);
     banana.y = Math.round(random(80,120));
-    banana.addImage(cloudImage);
-    banana.scale = 0.5;
-    banana.velocityX = -3;
+    banana.addImage(bananaImage);
+    banana.scale = 0.1;
+    banana.velocityX = -(6 + 3*score/100);
     
      //assign lifetime to the variable
     banana.lifetime = 200;
@@ -125,11 +138,15 @@ function spawnbanana() {
 }
 
 function spawnObstacle() {
-  if(frameCount % 60 === 0) {var obstacle = createSprite(600,165,10,40);
+  if(frameCount % 60 === 0) {
+   var obstacle = createSprite(400,170,50,40)
+  obstacle.addImage(obstacleImage);
+  obstacle.scale=0.1;
+  obstacle.velocityX=-2
     //obstacle.debug = true;
     obstacle.velocityX = -(6 + 3*score/100);
     
     //generate random obstacles
     var rand = Math.round(random(1,6));}
-    
-} 
+    } 
+}
